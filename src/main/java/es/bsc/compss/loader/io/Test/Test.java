@@ -15,24 +15,30 @@
  */
 package es.bsc.compss.loader.io.Test;
 
-import es.bsc.compss.loader.io.FileInputStream;
+import es.bsc.compss.loader.io.FileReader;
 import es.bsc.compss.loader.io.FileRegistry;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
 
 public class Test {
 
-	public static void main(String[] args) throws Exception {
-		String path = "/tmp/Test";
+    public static void main(String[] args) throws Exception {
+        String path = "/tmp/Test";
 
-		FileRegistry.addFile(path);
-		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (true) {
-			String line = br.readLine();
-			if (line != null) {
-				System.out.println(line);
-			}
-		}
-		//br.close();
-	}
+        FileRegistry.addTaskFile(path);
+
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        while (true) {
+            String line = br.readLine();
+            if (line != null) {
+                System.out.println(line);
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ie) {
+                break;
+            }
+        }
+        //br.close();
+    }
 }

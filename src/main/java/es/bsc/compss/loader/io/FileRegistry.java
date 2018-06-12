@@ -18,36 +18,38 @@ package es.bsc.compss.loader.io;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.TreeMap;
+import java.util.TreeSet;
+
 
 public class FileRegistry {
 
-	private static final TreeMap<String, String> file2Rename = new TreeMap<>();
+    private static final TreeSet<String> REGISTERED_FILES = new TreeSet<>();
 
-	private FileRegistry() {
-	}
+    private FileRegistry() {
+    }
 
-	public static String checkFile(String path) throws IOException {
-		String canonical = new File(path).getCanonicalPath();
-		String newPath = file2Rename.get(canonical);
-		if (newPath != null) {
-			return newPath;
-		} else {
-			return path;
-		}
-	}
+    public static void addTaskFile(String path) throws IOException {
+        File f = new File(path);
+        String canPath = f.getCanonicalPath();
+        REGISTERED_FILES.add(canPath);
+    }
 
-	public static File checkFile(File f) throws IOException {
-		String canonical = f.getCanonicalPath();
-		String newPath = file2Rename.get(canonical);
-		if (newPath != null) {
-			return new File(newPath);
-		} else {
-			return f;
-		}
-	}
+    public static void addTaskFile(File file) {
 
-	public static void addFile(String path) {
-		file2Rename.put(path, path + "2");
-	}
+    }
+
+    public static boolean isRegistered(String path) throws IOException {
+        File f = new File(path);
+        String canPath = f.getCanonicalPath();
+        return REGISTERED_FILES.contains(canPath);
+    }
+
+    public static boolean isRegistered(File f) throws IOException {
+        String canPath = f.getCanonicalPath();
+        return REGISTERED_FILES.contains(canPath);
+    }
+
+    public static boolean isRegistered(FileDescriptor fd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
